@@ -1,3 +1,5 @@
+# © 2021 - Will Serface
+
 import discord
 from random import randint
 
