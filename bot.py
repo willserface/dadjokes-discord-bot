@@ -33,9 +33,9 @@ async def on_message(message):
 
     # Listens to any variation of 'father', 'dad', or 'parent'
     if (str(message.content).upper().__contains__("DAD") or
-        str(message.content).upper().__contains__("FATHER") or
-        str(message.content).upper().__contains__("PARENT") or
-        str(message.content).upper().__contains__("PAPA")):
+            str(message.content).upper().__contains__("FATHER") or
+            str(message.content).upper().__contains__("PARENT") or
+            str(message.content).upper().__contains__("PAPA")):
         await message.channel.send("Eh? Did someone say my name?")
         return
 
@@ -43,6 +43,13 @@ async def on_message(message):
     if str(message.content).upper().__contains__("TELL ME A JOKE"):
         await message.reply(random_joke())
         return
+
+    # Listens for curse words
+    curses = ["FUCK", "SHIT", "BITCH", "HELL", "HECK", "FRICK", "FREAK", "DICK", "STUPID", "DUMB", "SHUT UP"]
+    for curse in curses:
+        if str(message.content).upper().__contains__(curse):
+            await message.reply("Language!")
+            return
 
     # Listens to 'I'm ____'
     if (
@@ -60,5 +67,6 @@ async def on_message(message):
         else:
             await message.reply("Hi, " + user_is + "! I am " + server_name(client.user))
         return
+
 
 client.run(input("Enter bot token: "))
