@@ -11,23 +11,51 @@ def random_joke():
     return jokes[randint(0, len(jokes))]
 
 
+def server_name(user):
+    return user.display_name
+
+
 @client.event
 async def on_ready():
     await client.change_presence(
         activity=discord.Activity(
             type=discord.ActivityType.listening,
-            name="\'tell me a joke\'"
+            name="the news"
         ))
     print("Logged in as", client.user)
 
 
 @client.event
 async def on_message(message):
+    # Prevents self replies
     if message.author == client.user:
         return
 
-    if str(message.content).upper().__contains__("TELL ME A JOKE"):
-        await message.channel.send(random_joke())
+    # Listens to any variation of 'father', 'dad', or 'parent'
+    if (str(message.content).upper().__contains__("DAD") or
+        str(message.content).upper().__contains__("FATHER") or
+        str(message.content).upper().__contains__("PARENT") or
+        str(message.content).upper().__contains__("PAPA")):
+        await message.channel.send("Eh? Did someone say my name?")
+        return
 
+    # Listens to any variation of 'tell me a joke'
+    if str(message.content).upper().__contains__("TELL ME A JOKE"):
+        await message.reply(random_joke())
+        return
+
+    # Listens to 'I'm ____'
+    if (
+            str(message.content).upper().startswith("IM") or
+            str(message.content).upper().startswith("I'M") or
+            str(message.content).upper().startswith("I AM")):
+        if str(message.content).upper().startswith("I AM"):
+            msg_split = str(message.content).split(' ')
+            user_is = " ".join(msg_split[2:len(msg_split)])
+        else:
+            msg_split = str(message.content).split(' ')
+            user_is = " ".join(msg_split[1:len(msg_split)])
+        await message.reply("Hi, " + user_is + "! I am " + server_name(client.user))
+        return
 
 client.run(input("Enter bot token: "))
