@@ -55,7 +55,10 @@ async def on_message(message):
         else:
             msg_split = str(message.content).split(' ')
             user_is = " ".join(msg_split[1:len(msg_split)])
-        await message.reply("Hi, " + user_is + "! I am " + server_name(client.user))
+        if user_is.upper() == "ANAKIN":
+            await message.reply("You can't pull a dad joke on your own father!")
+        else:
+            await message.reply("Hi, " + user_is + "! I am " + server_name(client.user))
         return
 
 client.run(input("Enter bot token: "))
