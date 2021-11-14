@@ -48,8 +48,12 @@ async def on_message(message):
     curses = ["FUCK", "SHIT", "BITCH", "HELL", "HECK", "FRICK", "FREAK", "DICK", "STUPID", "DUMB", "SHUT UP"]
     for curse in curses:
         if str(message.content).upper().__contains__(curse):
-            await message.reply("Language!")
-            return
+            if curse == "SHIT":
+                await message.reply(file=discord.File('shit.png'))
+                return
+            else:
+                await message.reply("Language!")
+                return
 
     # Listens to 'I'm ____'
     if (
