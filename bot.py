@@ -34,7 +34,7 @@ async def on_ready():
 async def on_message(message):
     # Prevents self replies
     if message.author == client.user:
-        return
+        return False
 
     # Remote stop capabilities
     if message.author.id == 609211773303652372 and str(message.content) == "bot remote shutoff":
@@ -49,33 +49,38 @@ async def on_message(message):
             str(message.content).upper().__contains__(" JOKE")
     ):
         await reply_log(message, random_joke())
-        return
+        return True
 
     # Listens for "shit"
     if str(message.content).upper().__contains__("SHIT"):
         await reply_log(message, discord.File('shit.png'))
-        return
+        return True
+
+    # Listens for "bitch"
+    if str(message.content).upper().__contains__("BITCH"):
+        await reply_log(message, '<@907441492874915861>')
+        return True
 
     # Listens for other curse words
-    curses = ["FUCK", "BITCH", "HELL", "HECK", "DICK", "STUPID", "DUMB", "SHUT UP"]
+    curses = ["FUCK", "HELL", "HECK", "DICK", "STUPID", "DUMB", "SHUT UP", "DAMN"]
     for curse in curses:
         if str(message.content).upper().__contains__(curse):
             await reply_log(message, "Language!")
-            return
+            return True
 
-        # Listens to any variation of 'father', 'dad', or 'parent'
+    # Listens to any variation of 'father', 'dad', or 'parent'
     if (str(message.content).upper().__contains__("DAD") or
             str(message.content).upper().__contains__("FATHER") or
             str(message.content).upper().__contains__("PARENT") or
             str(message.content).upper().__contains__("PAPA")):
         await reply_log(message, "Eh? Did someone say my name?")
-        return
+        return True
 
     # Listens for 'I'm ____'
     if (
-            str(message.content).upper().startswith("IM") or
-            str(message.content).upper().startswith("I'M") or
-            str(message.content).upper().startswith("I AM")
+            str(message.content).upper().startswith("IM ") or
+            str(message.content).upper().startswith("I'M ") or
+            str(message.content).upper().startswith("I AM ")
     ):
         if str(message.content).upper().startswith("I AM"):
             msg_split = str(message.content).split(' ')
@@ -85,18 +90,34 @@ async def on_message(message):
             user_is = " ".join(msg_split[1:len(msg_split)])
         if user_is.upper() == "ANAKIN":
             await reply_log(message, "You can't pull a dad joke on your own father!")
-            return
+            return True
         elif user_is.upper().__contains__("MERIDIA"):
-            await reply_log(message, "You can't trick me, " + message.author.display_name + ".")
-            return
+            await reply_log(message, "You can't trick me, <@" + str(message.author.id) + ">.")
+            return True
+
+        elif (
+                user_is.upper().__contains__("IM ") or
+                user_is.upper().__contains__("I'M ") or
+                user_is.upper().__contains__("I AM ")
+        ):
+            await reply_log(message, "Did you stutter?")
+            return True
+        elif user_is != "":
+            await reply_log(message, ("Hi, " + user_is.upper() + "!"))
+            return True
         else:
-            await reply_log(message, ("Hi, " + user_is + "!"))
-            return
+            return False
 
 
 @client.event
 async def on_message_delete(message):
-    reply_list[message].delete()
+    await reply_list[message].delete()
+
+
+@client.event
+async def on_message_edit(message_before, message_after):
+    await reply_list[message_before].delete()
+    await on_message(message_after)
 
 
 client.run(input("Enter bot token: "))
