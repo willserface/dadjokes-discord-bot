@@ -102,8 +102,11 @@ async def on_message(message):
         ):
             await reply_log(message, "Did you stutter?")
             return True
+        elif any(not s.isascii() for s in user_is):
+            await reply_log(message, "I don't think so, <@"+str(message.author.id)+">")
+            return False
         elif user_is != "":
-            await reply_log(message, ("Hi, " + user_is.upper() + "!"))
+            await reply_log(message, ("Hi, " + user_is + "! I am <@"+str(908798748493217843)+">"))
             return True
         else:
             return False
