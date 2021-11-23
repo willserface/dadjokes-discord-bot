@@ -123,4 +123,4 @@ async def on_message_edit(message_before, message_after):
     await on_message(message_after)
 
 
-client.run(input("Enter bot token: "))
+client.run(str(open("token.txt", 'r').read()))
