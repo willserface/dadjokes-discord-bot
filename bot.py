@@ -2,6 +2,7 @@
 
 import discord
 from random import randint
+from time import sleep as wait
 
 client = discord.Client()
 reply_list = {}
@@ -20,13 +21,17 @@ def random_joke():
     return jokes[randint(0, len(jokes))]
 
 
-@client.event
-async def on_ready():
+async def reset_status():
     await client.change_presence(
         activity=discord.Activity(
             type=discord.ActivityType.listening,
             name="the news")
     )
+
+
+@client.event
+async def on_ready():
+    await reset_status()
     print("Logged in as", client.user)
 
 
@@ -45,10 +50,18 @@ async def on_message(message):
     # Listens to any variation of 'tell me a joke'
     if (
             str(message.content).upper().__contains__("TELL ") and
-            str(message.content).upper().__contains__(" A ") and
+            str(message.content).upper().__contains__(" A") and
             str(message.content).upper().__contains__(" JOKE")
     ):
         await reply_log(message, random_joke())
+        await client.change_presence(
+            activity=discord.Activity(
+                type=discord.ActivityType.listening,
+                name=str(message.author.nick) + "'s laughter"
+            )
+        )
+        wait(10)
+        await reset_status()
         return True
 
     # Listens for "shit"
@@ -62,7 +75,7 @@ async def on_message(message):
         return True
 
     # Listens for other curse words
-    curses = ["FUCK", "HELL", "HECK", "DICK", "STUPID", "DUMB", "SHUT UP", "DAMN"]
+    curses = ["FUCK", "HELL ", "HECK", "DICK", "STUPID", "DUMB", "SHUT UP", "DAMN"]
     for curse in curses:
         if str(message.content).upper().__contains__(curse):
             await reply_log(message, "Language!")
@@ -88,11 +101,11 @@ async def on_message(message):
         else:
             msg_split = str(message.content).split(' ')
             user_is = " ".join(msg_split[1:len(msg_split)])
-        if user_is.upper() == "ANAKIN":
+        if user_is.upper() == "LUKE":
             await reply_log(message, "You can't pull a dad joke on your own father!")
             return True
         elif user_is.upper().__contains__("MERIDIA"):
-            await reply_log(message, "You can't trick me, <@" + str(message.author.id) + ">.")
+            await reply_log(message, "Stop bringing <@907441492874915861> into this, <@" + str(message.author.id) + ">")
             return True
 
         elif (
@@ -103,10 +116,10 @@ async def on_message(message):
             await reply_log(message, "Did you stutter?")
             return True
         elif any(not s.isascii() for s in user_is):
-            await reply_log(message, "I don't think so, <@"+str(message.author.id)+">")
+            await reply_log(message, "I'm pretty sure you are using special characters.")
             return False
         elif user_is != "":
-            await reply_log(message, ("Hi, " + user_is + "! I am <@"+str(908798748493217843)+">"))
+            await reply_log(message, ("Hi, " + user_is + "! I am <@" + str(908798748493217843) + ">"))
             return True
         else:
             return False
