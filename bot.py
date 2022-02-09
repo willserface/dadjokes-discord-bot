@@ -49,7 +49,7 @@ async def on_message(message):
 
     # Listens to any variation of 'tell me a joke'
     if (
-            str(message.content).upper().__contains__("TELL ") and
+            str(message.content).upper().__contains__("TELL") and
             str(message.content).upper().__contains__(" A") and
             str(message.content).upper().__contains__(" JOKE")
     ):
@@ -75,7 +75,7 @@ async def on_message(message):
         return True
 
     # Listens for other curse words
-    curses = ["FUCK", "HELL ", "HECK", "DICK", "STUPID", "DUMB", "SHUT UP", "DAMN"]
+    curses = [" FUCK", "HELL ", " HECK ", "DICK", " STUPID", " DUMB", "SHUT UP", "DAMN"]
     for curse in curses:
         if str(message.content).upper().__contains__(curse):
             await reply_log(message, "Language!")
