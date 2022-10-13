@@ -6,7 +6,7 @@
    - Use this [link](https://discord.com/oauth2/authorize?client_id=908798748493217843&permissions=2048&scope=bot%20applications.commands) to add the bot to your server
      - Bot will request message read and command creation permissions
    - Use your own computer to run `bot.py` and supply your own bot
-     - You will be prompted to `input()` your bot's token
+     - You will need to add your bot's token as `./token.txt`
 
 ### Features
  - On startup, bot will set its status to be "Listening to the news"
