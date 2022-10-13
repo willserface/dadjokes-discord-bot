@@ -2,17 +2,18 @@
 
 import discord
 from random import randint
-from time import sleep as wait
 
-client = discord.Client()
+intents = discord.Intents.default()
+intents.message_content=True
+client = discord.Client(intents=intents)
 reply_list = {}
 
 
 async def reply_log(message, string):
     if isinstance(string, discord.File):
-        log = await message.reply(file=string)
+        log = await message.channel.send(file=string)
     else:
-        log = await message.reply(string)
+        log = await message.channel.send(string)
     reply_list[message] = log
 
 
@@ -60,7 +61,6 @@ async def on_message(message):
                 name=str(message.author.nick) + "'s laughter"
             )
         )
-        wait(10)
         await reset_status()
         return True
 
@@ -135,5 +135,5 @@ async def on_message_edit(message_before, message_after):
     await reply_list[message_before].delete()
     await on_message(message_after)
 
-
-client.run(str(open("token.txt", 'r').read()))
+token = (str(open("token.txt", 'r').read()))
+client.run(token)
